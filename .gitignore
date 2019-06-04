@@ -1,1 +1,6 @@
 /rimone/
+
+# On the go generated files (project specific)
+*.pyc
+*.csv
+*.pkl
