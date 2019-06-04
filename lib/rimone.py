@@ -32,16 +32,21 @@ def raw_data(path='rimone', verbose=True):
         if not re.search(VALID_IMAGE_REGEXP, file):
             continue
         if verbose:
-            print(f'=> {len(eyes_id)} images found', end='\r')
+            print(f' => {len(eyes_id)} images found', end='\r')
         eye = file[:-4]
+        original = cv2.imread(f'{path}/{eye}.jpg')
+        disc_mask = cv2.imread(f'{path}/{eye}-1-Disc-exp1.jpg')
+        cup_mask = cv2.imread(f'{path}/{eye}-1-Cup-exp1.jpg')
         eyes_images.append({
-            'original': cv2.imread(f'{path}/{eye}.jpg'),
-            'disc_mask': cv2.imread(f'{path}/{eye}-1-Disc-exp1.jpg'),
-            'cup_mask': cv2.imread(f'{path}/{eye}-1-Cup-exp1.jpg')
+            'original': original.copy(),
+            'disc_mask': disc_mask.copy(),
+            'cup_mask': cup_mask.copy(),
+            'original_disc': cv2.bitwise_and(original, original, mask=disc_mask[:, :, 0]),
+            'original_cup': cv2.bitwise_and(original, original, mask=cup_mask[:, :, 0])
         })
         eyes_diagnosis.append(1 if eye[0] == 'G' else 0) # G | N
         eyes_id.append(eye)
-    print(f'=> {len(eyes_id)} images found')
+    print(f' => {len(eyes_id)} images found')
 
     return {
         'images': eyes_images,
