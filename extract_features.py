@@ -13,31 +13,37 @@ HARALICK_NAMES = [
     'info_corr_ii'
 ]
 
-if __name__ == "__main__":
-    print(' => Getting dataset')
+
+def extract_features(verbose=True):
+    if verbose:
+        print(' => Getting dataset')
     # In order to avoid re-reading all the images, a backup is created
     try:
         with open(BACKUP_URI, 'rb') as backup:
-            print(' => Raw data backup found')
+            if verbose:
+                print(' => Raw data backup found')
             data = pickle.load(backup)
     except FileNotFoundError:
         data = rimone.raw_data()
         with open(BACKUP_URI, 'wb+') as backup:
-            print(' => Creating raw data backup')
+            if verbose:
+                print(' => Creating raw data backup')
             pickle.dump(data, backup)
 
-    print(' => Creating DF with information from images')
+    if verbose:
+        print(' => Creating DF with information from images')
     meta = pd.DataFrame()
     meta['eye_id'] = data['ids']
     meta['diagnosis'] = data['Y']
-    
+
     # DF to store features
     features = pd.DataFrame()
-    hh_disc = list(map(lambda x: x + '_disc', HARALICK_NAMES))
-    hh_cup = list(map(lambda x: x + '_cup', HARALICK_NAMES))
+    hh_disc = list(map(lambda x: 'Disc ' + x, HARALICK_NAMES))
+    hh_cup = list(map(lambda x: 'Cup ' + x, HARALICK_NAMES))
     # Calculating features
     for i, imgs in enumerate(data['images']):
-        print(f' => Calculating features ... {i}/{meta.shape[0]} eyes processed', end='\r')
+        if verbose:
+            print(f' => Calculating features ... {i}/{meta.shape[0]} eyes processed', end='\r')
         entry_feats = {
             'cdr': cdr(imgs['disc_mask'], imgs['cup_mask'])
         }
@@ -57,8 +63,10 @@ if __name__ == "__main__":
     print(f' => Calculating features ... {meta.shape[0]} eyes processed')
 
     features = pd.concat((meta, features), axis=1, sort=True)
+    return features
 
+
+if __name__ == '__main__':
+    df = extract_features()
     print(' => Saving as CSV')
-    features.to_csv(RESULT_URI, index=False)
-    # How did this end up?
-    # print(features)
+    df.to_csv(RESULT_URI, index=False)
