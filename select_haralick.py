@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
 
 from lib import rimone
 
@@ -20,27 +21,27 @@ def run():
     print(' => Reading RIMONE meta-data')
     ds = rimone.dataset()
 
-    # Calculating for disc
-    print(' => Calculating best Haralick combination for disc image')
+    # Calculating for disc images
+    print(' => Calculating best Haralick combination for disc images')
     results = get_best_comb([
         cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         for img in ds.discs
     ], ds.Y, msg='disc')
-    results.to_csv('results/haralick_best_comb_disc.csv', index=False)
-    # Calculating for cup
-    print(' => Calculating best Haralick combination for cup image')
+    results.to_csv('results/haralick_best_comb_disc.csv')
+    # Calculating for cup images
+    print(' => Calculating best Haralick combination for cup images')
     results = get_best_comb([
         cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         for img in ds.cups
     ], ds.Y, msg='cup')
-    results.to_csv('results/haralick_best_comb_cup.csv', index=False)
-    # Calculating for all
-    print(' => Calculating best Haralick combination for full image')
+    results.to_csv('results/haralick_best_comb_cup.csv')
+    # Calculating for full images
+    print(' => Calculating best Haralick combination for full images')
     results = get_best_comb([
         cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         for img in ds.original_images
     ], ds.Y, msg='full')
-    results.to_csv('results/haralick_best_comb_full.csv', index=False)
+    results.to_csv('results/haralick_best_comb_full.csv')
 
     print(' => Done! You can check the results at `results/`')
 
@@ -83,9 +84,8 @@ def get_best_comb(images, target, msg=''):
                 'Distance': dist,
                 'Degrees': DEGREES[degree],
                 'Score': avg_score
-            }, ignore_index=True)
-    results.sort_values('Score', ascending=False, inplace=True)
-    return results
+            }, ignore_index=True).round(4)
+    return results.pivot(index='Distance', columns='Degrees', values='Score')
 
 
 if __name__ == "__main__":
