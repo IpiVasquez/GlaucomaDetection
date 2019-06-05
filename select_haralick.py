@@ -46,6 +46,11 @@ def run():
 
 
 def get_best_comb(images, target, msg=''):
+    """Net search over Haralick features.
+
+    The net search is performed over the next params:
+        degrees x distance: (0, 45, 90, 135, mean) x (1px, 2px, 3px)
+    """
     results = pd.DataFrame()
     # In disc
     for dist in range(1, 4):
