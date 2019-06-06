@@ -12,6 +12,8 @@ if __name__ == '__main__':
     df = extractor.extract_features(verbose=True)
     print(' => Saving raw features in CSV')
     df.to_csv(RAW_RESULT_URI, index=False)
+    # Normalizing
     df.loc[:, df.columns[2:]] = StandardScaler().fit_transform(
         df.loc[:, df.columns[2:]])
+    print(' => Saving processed features in CSV')
     df.to_csv(PROCESSED_RESULT_URI, index=False)
