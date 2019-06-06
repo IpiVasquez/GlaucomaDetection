@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
 
 def get_best_params(values, target):
     """Main handler.
 
-    This function looks for the best param combinations
+    This function looks for the best param combinations.
     """
     print(' => Best features for SVM', end='\r')
 
