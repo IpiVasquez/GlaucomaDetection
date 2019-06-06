@@ -109,6 +109,7 @@ class RimoneDataset:
                 cv2.imread(f'{self.path}/{eye}-1-Disc-exp1.jpg')[:, :, 0]
                 for eye in self.ids
             ])
+            imgs[imgs != 0] = 1
             # Store backup
             with open(f'{BACKUP_DIR}/{DISC_MASK_BACKUP}', 'wb+') as file:
                 pickle.dump(imgs, file)
@@ -127,6 +128,7 @@ class RimoneDataset:
                 cv2.imread(f'{self.path}/{eye}-1-Cup-exp1.jpg')[:, :, 0]
                 for eye in self.ids
             ])
+            imgs[imgs != 0] = 1
             # Store backup
             with open(f'{BACKUP_DIR}/{CUP_MASK_BACKUP}', 'wb+') as file:
                 pickle.dump(imgs, file)
@@ -175,4 +177,5 @@ class RimoneDataset:
 
 
 def dataset():
+    """Returns dataset."""
     return RimoneDataset()
