@@ -1,0 +1,42 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BACKUP_DIR	../lib/constants.py	/^BACKUP_DIR = 'datasets\/rimone'$/;"	kind:variable	line:3
+CUP_BACKUP	../lib/rimone.py	/^CUP_BACKUP = 'cup.pkl'$/;"	kind:variable	line:14
+CUP_MASK_BACKUP	../lib/rimone.py	/^CUP_MASK_BACKUP = 'cup_mask.pkl'$/;"	kind:variable	line:12
+DEGREES	../select_haralick.py	/^DEGREES = ['0', '45', '90', '135', 'mean of previous 4']$/;"	kind:variable	line:11
+DISC_BACKUP	../lib/rimone.py	/^DISC_BACKUP = 'disc.pkl'$/;"	kind:variable	line:13
+DISC_MASK_BACKUP	../lib/rimone.py	/^DISC_MASK_BACKUP = 'disc_mask.pkl'$/;"	kind:variable	line:11
+HARALICK_NAMES	../extract_features.py	/^HARALICK_NAMES = [$/;"	kind:variable	line:10
+META_BACKUP	../lib/rimone.py	/^META_BACKUP = 'meta.pkl'$/;"	kind:variable	line:9
+ORIGINAL_BACKUP	../lib/rimone.py	/^ORIGINAL_BACKUP = 'original.pkl'$/;"	kind:variable	line:10
+RESULT_URI	../extract_features.py	/^RESULT_URI = 'features.csv'$/;"	kind:variable	line:9
+RimoneDataset	../lib/rimone.py	/^class RimoneDataset:$/;"	kind:class	line:17
+VALID_IMAGE_REGEXP	../lib/constants.py	/^VALID_IMAGE_REGEXP = r'^(N|G)-\\d+-(L|R)\\.jpg$'$/;"	kind:variable	line:4
+Y	../lib/rimone.py	/^    def Y(self):$/;"	kind:member	line:78
+__init__	../lib/rimone.py	/^    def __init__(self, path='rimone', verbose=True):$/;"	kind:member	line:37
+__init__.py	../lib/__init__.py	1;"	kind:file	line:1
+__init__.py	../lib/features/__init__.py	1;"	kind:file	line:1
+__init__.py	../scripts/__init__.py	1;"	kind:file	line:1
+cdr	../lib/features/cdr.py	/^def cdr(disc, cup):$/;"	kind:function	line:3
+cdr.py	../lib/features/cdr.py	1;"	kind:file	line:1
+classes_names	../lib/rimone.py	/^    def classes_names(self):$/;"	kind:member	line:172
+constants.py	../lib/constants.py	1;"	kind:file	line:1
+cup_masks	../lib/rimone.py	/^    def cup_masks(self):$/;"	kind:member	line:118
+cups	../lib/rimone.py	/^    def cups(self):$/;"	kind:member	line:154
+dataset	../lib/rimone.py	/^def dataset():$/;"	kind:function	line:177
+df	../extract_features.py	/^    df = extract_features()$/;"	kind:variable	line:70
+disc_masks	../lib/rimone.py	/^    def disc_masks(self):$/;"	kind:member	line:100
+discs	../lib/rimone.py	/^    def discs(self):$/;"	kind:member	line:136
+extract_features	../extract_features.py	/^def extract_features(verbose=True):$/;"	kind:function	line:17
+extract_features.py	../extract_features.py	1;"	kind:file	line:1
+find_eyes	../lib/rimone.py	/^    def find_eyes(self):$/;"	kind:member	line:46
+get_best_comb	../select_haralick.py	/^def get_best_comb(images, target, msg=''):$/;"	kind:function	line:48
+ids	../lib/rimone.py	/^    def ids(self):$/;"	kind:member	line:73
+original_images	../lib/rimone.py	/^    def original_images(self):$/;"	kind:member	line:83
+rimone.py	../lib/rimone.py	1;"	kind:file	line:1
+run	../select_haralick.py	/^def run():$/;"	kind:function	line:14
+select_haralick.py	../select_haralick.py	1;"	kind:file	line:1
