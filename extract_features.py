@@ -4,7 +4,8 @@ import mahotas as mt
 import pandas as pd
 from lib.features import cdr
 from lib import rimone
-
+import numpy as np
+from lib.features import form
 
 RESULT_URI = 'results/extracted_features.csv'
 HARALICK_NAMES = [
@@ -33,12 +34,7 @@ def extract_features(verbose=True):
 
     # Calculating features
     features = pd.DataFrame()
-    # CDR
-    print(' => Calculating CDR')
-    form_features = pd.DataFrame([
-        cdr(disc, cup) for disc, cup in zip(ds.discs, ds.cups)
-    ], columns=['CDR'])
-    features = pd.concat((features, form_features), axis=1, sort=True)
+
     # Calculating Haralick features
     # DEGREES = [0, 45, 90, 135, mean(calculated)]
     # Full images => Orientation: 90 degrees, distance: 2
@@ -48,7 +44,7 @@ def extract_features(verbose=True):
             cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), distance=2)[2]
         for img in ds.original_images
     ], columns=hh_full)
-    features = pd.concat((features, haralick_features), axis=1, sort=True)
+    features = pd.concat((features, haralick_features), axis=1)
     # Disc images => Orientation: 135 degrees, distance: 1
     print(' => Calculating Haralick for the disc images')
     haralick_features = pd.DataFrame([
@@ -56,7 +52,7 @@ def extract_features(verbose=True):
             cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), distance=1)[3]
         for img in ds.discs
     ], columns=hh_disc)
-    features = pd.concat((features, haralick_features), axis=1, sort=True)
+    features = pd.concat((features, haralick_features), axis=1)
     # Cup images => Orientation: 90 degrees, distance: 3
     print(' => Calculating Haralick for the cup images')
     haralick_features = pd.DataFrame([
@@ -64,9 +60,11 @@ def extract_features(verbose=True):
             cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), distance=3)[2]
         for img in ds.cups
     ], columns=hh_cup)
-    features = pd.concat((features, haralick_features), axis=1, sort=True)
-    # Joining target & ids with features
-    features = pd.concat((meta, features), axis=1, sort=True)
+    features = pd.concat((features, haralick_features), axis=1)
+    
+    
+  # Joining target & ids with features
+    features = pd.concat((meta, features), axis=1)
 
     return features
 
