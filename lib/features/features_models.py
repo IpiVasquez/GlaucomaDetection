@@ -26,17 +26,6 @@ HARALICK_NAMES = [
 ]
 hh_disc = list(map(lambda x: 'Disc ' + x, HARALICK_NAMES))
 hh_cup = list(map(lambda x: 'Cup ' + x, HARALICK_NAMES))
-hh_full = list(map(lambda x: 'Full ' + x, HARALICK_NAMES))
-
-# Calculating Haralick features
-# DEGREES = [0, 45, 90, 135, mean(calculated)]
-# Full images => Orientation: 90 degrees, distance: 2
-print(' => Calculating Haralick for the full images')
-_haralick_complete = pd.DataFrame([
-    mt.features.haralick(
-        cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), distance=2)[2]
-    for img in ds.original_images
-], columns=hh_full)
 
 # Disc images => Orientation: 135 degrees, distance: 1
 print(' => Calculating Haralick for the disc images')
@@ -54,7 +43,7 @@ _haralick_cup = pd.DataFrame([
     for img in ds.cups
 ], columns=hh_cup)
 
-_haralick = pd.concat((_haralick_complete,_haralick_disc,_haralick_cup), axis=1)
+_haralick = pd.concat((_haralick_disc,_haralick_cup), axis=1)
 
 # CDR
 print(' => Calculating CDR')
