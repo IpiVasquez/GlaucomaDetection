@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
+"""Finds the best parameters to calculate Haralick features."""
 import cv2
 import mahotas as mt
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
 
-from lib import rimone
+from lib import rimone, evaluator
 
-DEGREES = ['0', '45', '90', '135', 'mean of previous 4']
+DEGREES = ['0', '45', '90', '135', 'mean']
 
 
 def run():
     """Main handler.
 
-    This function looks for the best combination of haralick features using net
-    search.
+    This function looks for the best combination of haralick parameters using
+    grid search. The possible parameters for haralick are distance (1, 2 & 3)
+    and neighborhood (0, 45, 90, 135 & mean*).
+
+    * mean refers to the mean of the (0, 45, 90, 135) neighborhoods.
     """
     print(' => Reading RIMONE meta-data')
     ds = rimone.dataset()
@@ -62,29 +65,18 @@ def get_best_comb(images, target, msg=''):
         ])
         # Mean of 4 degrees as the 5th feature
         haralick = np.append(haralick,
-                             haralick.mean(axis=1).reshape((target.shape[0], 1, 13)),
+                             haralick.mean(axis=1).reshape(
+                                 (target.shape[0], 1, 13)),
                              axis=1)
         for degree in range(5):  # 0, 45, 90, 135, means
             print(msg, end='\r')
-            scores = np.array([])  # Results of cross validation
-            for _ in range(20):  # 20 its on each one...
-                perms = np.random.permutation(haralick.shape[0])
-                x = haralick[perms, degree, :]
-                y = target[perms]
-                scores = np.append(
-                    scores,
-                    cross_val_score(
-                        GaussianNB(),
-                        x,
-                        y,
-                        cv=5
-                    ))
-            avg_score = scores.mean()
-            results = results.append({
+            values = StandardScaler().fit_transform(haralick[:, degree, :])
+            res = evaluator.evaluate(GaussianNB, values, target)
+            res.update({
                 'Distance': dist,
                 'Degrees': DEGREES[degree],
-                'Score': avg_score
-            }, ignore_index=True).round(4)
+            })
+            results = results.append(res, ignore_index=True).round(4)
     return results.pivot(index='Distance', columns='Degrees', values='Score')
 
 
