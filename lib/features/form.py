@@ -1,6 +1,5 @@
 """Form descriptors"""
 import cv2
-import mahotas as mt
 import numpy as np
 
 
