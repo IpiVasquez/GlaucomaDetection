@@ -3,18 +3,10 @@
 import cv2
 import mahotas as mt
 import pandas as pd
+
+from lib.constants import HH_DISC, HH_CUP, FH_DISC, FH_CUP
 from lib.features import form
 from lib import rimone
-
-from sklearn.preprocessing import StandardScaler
-
-
-HARALICK_NAMES = [
-    'energy', 'contrast', 'correlation', 'variance', 'homogeneity', 'sum avg',
-    'sum var', 'sum ent', 'entropy', 'diff var', 'diff ent', 'IC I',
-    'IC II'
-]
-FORM_NAMES = ['perimeter', 'area', 'compacity', 'centroid x', 'centroid y']
 
 
 def extract_features(verbose=True):
@@ -26,21 +18,16 @@ def extract_features(verbose=True):
     meta = pd.DataFrame()
     meta['ids'] = ds.ids
     meta['Diagnosis'] = ds.Y
-    # Haralick names
-    hh_disc = list(map(lambda x: 'Disc ' + x, HARALICK_NAMES))
-    hh_cup = list(map(lambda x: 'Cup ' + x, HARALICK_NAMES))
-    fh_disc = list(map(lambda x: 'Disc ' + x, FORM_NAMES))
-    fh_cup = list(map(lambda x: 'Cup ' + x, FORM_NAMES))
     # Calculating features
     features = pd.DataFrame()
     # Calculating form features
     if verbose:
         print(' => Calculating form features for Disc')
-    form_features = get_form(ds.disc_masks, fh_disc)
+    form_features = get_form(ds.disc_masks, FH_DISC)
     features = pd.concat((features, form_features), axis=1, sort=True)
     if verbose:
         print(' => Calculating form features for Cup')
-    form_features = get_form(ds.cup_masks, fh_cup)
+    form_features = get_form(ds.cup_masks, FH_CUP)
     features = pd.concat((features, form_features), axis=1, sort=True)
     if verbose:
         print(' => Calculating CDR')
@@ -49,13 +36,12 @@ def extract_features(verbose=True):
     # Disc images => Orientation: 135 degrees, distance: 1
     if verbose:
         print(' => Calculating Haralick for the disc images')
-    haralick_features = get_haralick(ds.discs, 1, hh_disc)
-    print(haralick_features)
+    haralick_features = get_haralick(ds.discs, 1, HH_DISC)
     features = pd.concat((features, haralick_features), axis=1, sort=True)
     # Cup images => Orientation: 90 degrees, distance: 3
     if verbose:
         print(' => Calculating Haralick for the cup images')
-    haralick_features = get_haralick(ds.discs, 3, hh_cup)
+    haralick_features = get_haralick(ds.discs, 3, HH_CUP)
     features = pd.concat((features, haralick_features), axis=1, sort=True)
     # Joining target & ids with features
     features = pd.concat((meta, features), axis=1, sort=True)
