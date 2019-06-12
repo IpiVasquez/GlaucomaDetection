@@ -29,7 +29,6 @@ def extract_features(verbose=True):
     # Haralick names
     hh_disc = list(map(lambda x: 'Disc ' + x, HARALICK_NAMES))
     hh_cup = list(map(lambda x: 'Cup ' + x, HARALICK_NAMES))
-    hh_full = list(map(lambda x: 'Full ' + x, HARALICK_NAMES))
     fh_disc = list(map(lambda x: 'Disc ' + x, FORM_NAMES))
     fh_cup = list(map(lambda x: 'Cup ' + x, FORM_NAMES))
     # Calculating features
@@ -47,21 +46,16 @@ def extract_features(verbose=True):
         print(' => Calculating CDR')
     features['CDR'] = features['Cup area'] / features['Disc area']
     # Calculating Haralick features
-    # DEGREES = [0, 45, 90, 135, mean(calculated)]
-    # Full images => Orientation: 90 degrees, distance: 2
-    if verbose:
-        print(' => Calculating Haralick for the full images')
-    haralick_features = get_haralick(ds.original_images, 2, 2, hh_full)
-    features = pd.concat((features, haralick_features), axis=1, sort=True)
     # Disc images => Orientation: 135 degrees, distance: 1
     if verbose:
         print(' => Calculating Haralick for the disc images')
-    haralick_features = get_haralick(ds.discs, 1, 3, hh_disc)
+    haralick_features = get_haralick(ds.discs, 1, hh_disc)
+    print(haralick_features)
     features = pd.concat((features, haralick_features), axis=1, sort=True)
     # Cup images => Orientation: 90 degrees, distance: 3
     if verbose:
         print(' => Calculating Haralick for the cup images')
-    haralick_features = get_haralick(ds.discs, 3, 2, hh_cup)
+    haralick_features = get_haralick(ds.discs, 3, hh_cup)
     features = pd.concat((features, haralick_features), axis=1, sort=True)
     # Joining target & ids with features
     features = pd.concat((meta, features), axis=1, sort=True)
@@ -69,11 +63,13 @@ def extract_features(verbose=True):
     return features
 
 
-def get_haralick(imgs, distance, degree, header):
+def get_haralick(imgs, distance, header):
     """Gets haralick features according to the parameters received."""
     return pd.DataFrame([
         mt.features.haralick(
-            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), distance=distance)[degree]
+            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+            distance=distance, ignore_zeros=True, return_mean=True
+        )
         for img in imgs
     ], columns=header)
 
