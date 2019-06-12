@@ -40,8 +40,9 @@ _fdr = _fdr.sort_values(ascending=False)
 print(' => Saving fdr.csv')
 _fdr.to_csv('results/fdr.csv')
 
-clf_index = 0
 
+clf_index = 0
+fdr_results = []
 for clf in clfs:
     print('\n{}'.format(clf_names[clf_index]))
     _score = []
@@ -54,14 +55,19 @@ for clf in clfs:
     for f in _fdr.index:
         ind.append(f)
         ds = data[ind]
-        print(" => testing fdr model with {} features".format(i))
+        print(" => testing {} fdr features".format(i))
         size = data.shape[1]
         X = ds
         y = target
-
         y = y.astype('int')
+
         X = StandardScaler().fit_transform(X)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
+
+        #print(y_train.sum())
+        #print(y_test.sum())
+        #print(y.sum())
+
         clf.fit(X_train, y_train)
         score = clf.score(X_test, y_test)
         y_pred = clf.predict(X_test)
@@ -81,9 +87,11 @@ for clf in clfs:
         _weighted.append(weighted)
         i += 1
     cols = ['accuracy', 'weighted', 'mcc', 'ber']
-    results = np.concatenate([_score, _weighted, _mcc, _ber]).reshape(4,50).T
+    results = np.concatenate([_score, _weighted, _mcc, _ber]).reshape(4,len(data.columns)-1).T
     results = pd.DataFrame(results, columns = cols)
-    print(results)
-    print(' => Saving csv')
-    results.to_csv('results/fdr_{}.csv'.format(clf_names[clf_index]))
+    fdr_results.append(results)
+    #print(' => Saving csv')
+    #results.to_csv('results/fdr_{}.csv'.format(clf_names[clf_index]))
     clf_index += 1
+
+print(fdr_results)
