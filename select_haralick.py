@@ -7,77 +7,46 @@ import pandas as pd
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
 
+from lib.constants import HARALICK_NAMES
 from lib import rimone, evaluator
-
-DEGREES = ['0', '45', '90', '135', 'mean']
+from lib.features import extractor
 
 
 def run():
     """Main handler.
 
-    This function looks for the best combination of haralick parameters using
-    grid search. The possible parameters for haralick are distance (1, 2 & 3)
-    and neighborhood (0, 45, 90, 135 & mean*).
-
-    * mean refers to the mean of the (0, 45, 90, 135) neighborhoods.
+    This function looks for the best distance on Haralick features on cup & 
+    disc.
     """
     print(' => Reading RIMONE meta-data')
     ds = rimone.dataset()
 
     # Calculating for disc images
     print(' => Calculating best Haralick combination for disc images')
-    results = get_best_comb([
-        cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        for img in ds.discs
-    ], ds.Y, msg='disc')
-    results.to_csv('results/haralick_best_comb_disc.csv')
+    results = get_best_comb(ds.discs, ds.Y, msg='disc')
+    results.to_csv('results/haralick_best_comb_disc.csv', index=False)
     # Calculating for cup images
     print(' => Calculating best Haralick combination for cup images')
-    results = get_best_comb([
-        cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        for img in ds.cups
-    ], ds.Y, msg='cup')
-    results.to_csv('results/haralick_best_comb_cup.csv')
-    # Calculating for full images
-    print(' => Calculating best Haralick combination for full images')
-    results = get_best_comb([
-        cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        for img in ds.original_images
-    ], ds.Y, msg='full')
-    results.to_csv('results/haralick_best_comb_full.csv')
+    results = get_best_comb(ds.cups, ds.Y, msg='cup')
+    results.to_csv('results/haralick_best_comb_cup.csv', index=False)
 
     print(' => Done! You can check the results at `results/`')
 
 
 def get_best_comb(images, target, msg=''):
-    """Net search over Haralick features.
-
-    The net search is performed over the next params:
-        degrees x distance: (0, 45, 90, 135, mean) x (1px, 2px, 3px)
-    """
+    """Looks for the best distance on Haralick features."""
     results = pd.DataFrame()
     # In disc
     for dist in range(1, 4):
-        print(f' ==> ({msg}) Distance {dist}/3 (all degrees + mean)', end='\r')
-        haralick = np.array([
-            mt.features.haralick(img, distance=dist)
-            for img in images
-        ])
-        # Mean of 4 degrees as the 5th feature
-        haralick = np.append(haralick,
-                             haralick.mean(axis=1).reshape(
-                                 (target.shape[0], 1, 13)),
-                             axis=1)
-        for degree in range(5):  # 0, 45, 90, 135, means
-            print(msg, end='\r')
-            values = StandardScaler().fit_transform(haralick[:, degree, :])
-            res = evaluator.evaluate(GaussianNB, values, target)
-            res.update({
-                'Distance': dist,
-                'Degrees': DEGREES[degree],
-            })
-            results = results.append(res, ignore_index=True).round(4)
-    return results.pivot(index='Distance', columns='Degrees', values='Score')
+        print(f' ==> ({msg}) Distance {dist}/3', end='\r')
+        haralick = extractor.get_haralick(images, dist, HARALICK_NAMES)
+        values = StandardScaler().fit_transform(haralick)
+        res = evaluator.evaluate(GaussianNB, values, target)
+        res.update({
+            'Distance': dist
+        })
+        results = results.append(res, ignore_index=True).round(4)
+    return results
 
 
 if __name__ == "__main__":
