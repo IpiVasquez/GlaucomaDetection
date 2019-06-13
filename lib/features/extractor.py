@@ -33,16 +33,29 @@ def extract_features(verbose=True):
         print(' => Calculating CDR')
     features['CDR'] = features['Cup area'] / features['Disc area']
     # Calculating Haralick features
-    # Disc images => Orientation: 135 degrees, distance: 1
+    # Disc images => distance: 1
     if verbose:
         print(' => Calculating Haralick for the disc images')
     haralick_features = get_haralick(ds.discs, 1, HH_DISC)
     features = pd.concat((features, haralick_features), axis=1, sort=True)
-    # Cup images => Orientation: 90 degrees, distance: 3
+    # Cup images => distance: 3
     if verbose:
         print(' => Calculating Haralick for the cup images')
-    haralick_features = get_haralick(ds.discs, 3, HH_CUP)
+    haralick_features = get_haralick(ds.cups, 3, HH_CUP)
     features = pd.concat((features, haralick_features), axis=1, sort=True)
+    # Calculating LBPs
+    # Disc images => r: 2, p: 7
+    if verbose:
+        print(' => Calculating LBP for the disc images')
+    lbps = get_lbp(ds.discs, 2, 7)
+    lbps.columns = [f'Disc {col}' for col in lbps.columns]
+    features = pd.concat((features, lbps), axis=1, sort=True)
+    # Cup images => r: 2, p: 10
+    if verbose:
+        print(' => Calculating LBP for the cup images')
+    lbps = get_lbp(ds.cups, 2, 10)
+    lbps.columns = [f'Cup {col}' for col in lbps.columns]
+    features = pd.concat((features, lbps), axis=1, sort=True)
     # Joining target & ids with features
     features = pd.concat((meta, features), axis=1, sort=True)
 
@@ -58,6 +71,20 @@ def get_haralick(imgs, distance, header):
         )
         for img in imgs
     ], columns=header)
+
+
+def get_lbp(imgs, radius=1, points=8, header=None):
+    """Gets haralick features according to the parameters received."""
+    lbp = pd.DataFrame([
+        mt.features.lbp(
+            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+            radius, points, ignore_zeros=True
+        )
+        for img in imgs
+    ], columns=header)
+    if not header:
+        lbp.columns = [f'LBP {i}' for i in lbp.columns]
+    return lbp
 
 
 def get_form(imgs, header):
