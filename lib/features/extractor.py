@@ -4,12 +4,52 @@ import cv2
 import mahotas as mt
 import pandas as pd
 
-from lib.constants import HH_DISC, HH_CUP, FH_DISC, FH_CUP
+from lib.constants import HH_DISC, HH_CUP, FH_DISC, FH_CUP, HARALICK_NAMES
 from lib.features import form
 from lib import rimone
 
 
-def extract_features(verbose=True):
+def get_haralick(imgs, distance=2, header=HARALICK_NAMES):
+    """Gets Haralick features according to the distance received.
+
+    The Haralick features calculated will be an average of the possible
+    directions (pi/2, pi, 3pi/2, 2pi).
+    """
+    return pd.DataFrame([
+        mt.features.haralick(
+            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+            distance=distance, ignore_zeros=True, return_mean=True
+        )
+        for img in imgs
+    ], columns=header)
+
+
+def get_lbp(imgs, radius=1, points=8, header=None):
+    """Gets Local Binary Patterns features.
+
+    According to the parameters received the result of this function may change.
+    """
+    lbp = pd.DataFrame([
+        mt.features.lbp(
+            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+            radius, points, ignore_zeros=True
+        )
+        for img in imgs
+    ], columns=header)
+    if not header:
+        lbp.columns = [f'LBP {i}' for i in lbp.columns]
+    return lbp
+
+
+def get_form(imgs, header):
+    """Gets form features."""
+    return pd.DataFrame([
+        form.form_descriptors(img)
+        for img in imgs
+    ], columns=header)
+
+
+def extract(verbose=True):
     """Extract all the features from the RIMONE-r3 dataset."""
     if verbose:
         print(' => Getting dataset')
@@ -60,36 +100,3 @@ def extract_features(verbose=True):
     features = pd.concat((meta, features), axis=1, sort=True)
 
     return features
-
-
-def get_haralick(imgs, distance, header):
-    """Gets haralick features according to the parameters received."""
-    return pd.DataFrame([
-        mt.features.haralick(
-            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
-            distance=distance, ignore_zeros=True, return_mean=True
-        )
-        for img in imgs
-    ], columns=header)
-
-
-def get_lbp(imgs, radius=1, points=8, header=None):
-    """Gets haralick features according to the parameters received."""
-    lbp = pd.DataFrame([
-        mt.features.lbp(
-            cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
-            radius, points, ignore_zeros=True
-        )
-        for img in imgs
-    ], columns=header)
-    if not header:
-        lbp.columns = [f'LBP {i}' for i in lbp.columns]
-    return lbp
-
-
-def get_form(imgs, header):
-    """Gets form features."""
-    return pd.DataFrame([
-        form.form_descriptors(img)
-        for img in imgs
-    ], columns=header)

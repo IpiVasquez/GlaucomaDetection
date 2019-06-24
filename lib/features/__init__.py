@@ -1,1 +1,1 @@
-from .cdr import cdr
+from .extractor import extract_features
