@@ -19,8 +19,8 @@ def evaluate(classifier, X, Y, params={}):
         'Accuracy': accuracy.mean(),
         'BAS': balanced_accuracy_score(Y, preds),
         'BER': ber(Y, preds),
-        'Sensibility': accuracy[Y != 0].sum() / Y.sum(),
-        'Specificity': accuracy[Y == 0].sum() / (Y == 0).sum(),
+        'Sensibility': tp.sum() / Y.sum(),
+        'Specificity': tn.sum() / (Y == 0).sum(),
     }
 
 
