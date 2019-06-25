@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, roc_auc_score
 from sklearn.svm import SVC
+from sklearn.ensemble import AdaBoostClassifier
 
 from lib.constants import TRAIN_URI, TEST_URI
 
@@ -49,6 +50,10 @@ y_test = test['Diagnosis']
 svc = SVC(C=0.1, kernel='linear')
 svc.fit(x_train, y_train)
 pred = svc.predict(x_test)
+# ada = AdaBoostClassifier(learning_rate=0.08)
+# ada.fit(x_train, y_train)
+# pred = ada.predict(x_test)
+
 accuracy = y_test == pred
 tp = accuracy[y_test != 0]
 tn = accuracy[y_test == 0]
