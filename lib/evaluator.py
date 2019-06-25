@@ -10,12 +10,17 @@ def evaluate(classifier, X, Y, params={}):
         model = classifier(**params)
         model.fit(X[train_idx], Y[train_idx])
         preds = np.append(preds, model.predict(X[test_idx]))
+    accuracy = Y == preds
+    tp = accuracy[Y != 0]
+    tn = accuracy[Y == 0]
 
     return {
         'MCC': matthews_corrcoef(Y, preds),
-        'Accuracy': (Y == preds).mean(),
+        'Accuracy': accuracy.mean(),
         'BAS': balanced_accuracy_score(Y, preds),
-        'BER': ber(Y, preds)
+        'BER': ber(Y, preds),
+        'Sensibility': accuracy[Y != 0].sum() / Y.sum(),
+        'Specificity': accuracy[Y == 0].sum() / (Y == 0).sum(),
     }
 
 

@@ -1,23 +1,32 @@
 #!/usr/bin/env python3
 import pandas as pd
-from classifier_selectors import rbf_svm, linear_svm
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier as KNN
+from classifier_selectors import linear_svm, ada_boost, knn
+# from lib.grid_search import get_best_params
 
 
-def run():
+def grid_search():
     """Main handler.
 
-    This function looks for the best classifier & it's best parameter
-    combination.
+    This function looks for the best classifier & it's best combination of
+    parameters.
     """
+
     print(' => Reading features dataset')
-    df = pd.read_csv('results/extracted_features.csv').drop('ids', axis=1)
+    df = pd.read_csv('results/processed_extracted_features.csv').drop('ids', axis=1)
     y = df['Diagnosis'].values
     x = df[df.columns[1:]].values
-    results = rbf_svm.get_best_params(x, y)
-    results.to_csv('results/grid_rbf_svm.csv')
-    results = linear_svm.get_best_params(x, y)
+    results = ada_boost.get_best_params(x, y).sort_values('Accuracy', ascending=False)
+    print(results)
+    results.to_csv('results/grid_ada_boost.csv')
+    results = linear_svm.get_best_params(x, y).sort_values('Accuracy', ascending=False)
+    print(results)
     results.to_csv('results/grid_linear_svm.csv')
+    results = knn.get_best_params(x, y).sort_values('Accuracy', ascending=False)
+    print(results)
+    results.to_csv('results/grid_knn.csv', index=False)
 
 
 if __name__ == "__main__":
-    run()
+    grid_search()
