@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from lib.evaluator import evaluate
 
 
-def get_best_params(values, target, verbose=True):
+def grid_search(values, target, verbose=True):
     """Looks for the best param combinations for KNN."""
     stdout.write(' => Best Ks for KNN\n')
     results = pd.DataFrame(columns=['K', 'Accuracy'])

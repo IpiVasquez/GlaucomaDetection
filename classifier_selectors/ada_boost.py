@@ -9,7 +9,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from lib.evaluator import evaluate
 
 
-def get_best_params(values, target, verbose=True):
+def grid_search(values, target, verbose=True):
     """Looks for the best param combinations for AdaBoost."""
     if verbose:
         stdout.write(' => Getting best LRates for AdaBoost\n')

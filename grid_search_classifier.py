@@ -18,13 +18,13 @@ def grid_search():
     df = pd.read_csv(TRAIN_URI)  # .drop('ids', axis=1)
     y = df['Diagnosis'].values
     x = df[df.columns[1:]].values
-    results = ada_boost.get_best_params(x, y).sort_values('Accuracy', ascending=False)
+    results = ada_boost.grid_search(x, y).sort_values('Accuracy', ascending=False)
     print(results)
     results.to_csv('results/grid_ada_boost.csv')
-    results = linear_svm.get_best_params(x, y).sort_values('Accuracy', ascending=False)
+    results = linear_svm.grid_search(x, y).sort_values('Accuracy', ascending=False)
     print(results)
     results.to_csv('results/grid_linear_svm.csv')
-    results = knn.get_best_params(x, y).sort_values('Accuracy', ascending=False)
+    results = knn.grid_search(x, y).sort_values('Accuracy', ascending=False)
     print(results)
     results.to_csv('results/grid_knn.csv', index=False)
 
