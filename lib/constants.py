@@ -1,5 +1,6 @@
 """Specifies a set of constants to use around the project."""
 
+RANDOM_STATE = 97
 SELECTION_CRITERIA = 'Sensibility'
 FEATURES_URI = 'results/extracted_features.csv'
 TRAIN_URI = 'datasets/train.csv'
