@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, roc_auc_score
 from sklearn.svm import SVC
 
-from lib.constants import FEATURES_URI
+from lib.constants import TRAIN_URI, TEST_URI
 
 
 # Obtained from FFS
@@ -37,15 +37,13 @@ SELECTED_FEATURES = [
     'Cup LBP 3', 'Disc sum var', 'Cup LBP 49', 'Cup LBP 86']
 
 
-df = pd.read_csv(FEATURES_URI)
+train = pd.read_csv(TRAIN_URI)
+test = pd.read_csv(TEST_URI)
 
-x = df[SELECTED_FEATURES].values
-y = df['Diagnosis']
-# ri = np.random.randint(100)
-ri = 97
-
-x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, test_size=0.2,
-                                                    random_state=ri)
+x_train = train[SELECTED_FEATURES].values
+y_train = train['Diagnosis']
+x_test = test[SELECTED_FEATURES].values
+y_test = test['Diagnosis']
 
 
 svc = SVC(C=0.1, kernel='linear')
@@ -60,11 +58,11 @@ tp = tp.sum()
 tn = tn.sum()
 
 
-print({
-    'Accuracy': accuracy.mean(),
-    'Sensitivity': accuracy[y_test != 0].sum() / y_test.sum(),
-    'Specificity': accuracy[y_test == 0].sum() / (y_test == 0).sum(),
-    'BAS': balanced_accuracy_score(y_test, pred),
-    'BER': 1 - balanced_accuracy_score(y_test, pred),
-    'MCC': matthews_corrcoef(y_test, pred),
-})
+print(f'''
+    Accuracy:\t\t {accuracy.mean()},
+    Sensitivity:\t {accuracy[y_test != 0].sum() / y_test.sum()}
+    Specificity:\t {accuracy[y_test == 0].sum() / (y_test == 0).sum()},
+    BAS:\t\t {balanced_accuracy_score(y_test, pred)}
+    BER:\t\t {1 - balanced_accuracy_score(y_test, pred)},
+    MCC:\t\t {matthews_corrcoef(y_test, pred)}
+''')
