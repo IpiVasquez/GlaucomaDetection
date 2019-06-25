@@ -2,6 +2,8 @@
 
 SELECTION_CRITERIA = 'Sensibility'
 FEATURES_URI = 'results/extracted_features.csv'
+TRAIN_URI = 'datasets/train.csv'
+TEST_URI = 'datasets/test.csv'
 BACKUP_DIR = 'datasets/rimone'
 VALID_IMAGE_REGEXP = r'^(N|G)-\d+-(L|R)\.jpg$'
 
