@@ -5,7 +5,7 @@ import sys
 from sklearn.preprocessing import StandardScaler
 
 from lib.constants import FEATURES_URI
-from lib.features import extractor
+from lib import extractor
 
 
 def get_dataset(verbose=False, ids=False):
@@ -21,7 +21,7 @@ def get_dataset(verbose=False, ids=False):
     _______
     A pandas.DataFrame with the information features.
     """
-    df = extractor.extract(verbose=verbose)
+    df = extractor.extract_features(verbose=verbose)
     # Normalizing
     df.loc[:, df.columns[2:]] = StandardScaler().fit_transform(
         df.loc[:, df.columns[2:]])

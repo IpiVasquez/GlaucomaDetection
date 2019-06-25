@@ -2,11 +2,36 @@
 """Feature extraction."""
 import cv2
 import mahotas as mt
+import numpy as np
 import pandas as pd
 
 from lib.constants import HH_DISC, HH_CUP, FH_DISC, FH_CUP, HARALICK_NAMES
-from lib.features import form
 from lib import rimone
+
+
+def get_form_descriptors(img):
+    """Calculates form descriptors.
+
+    1. Perimeter
+    2. Area
+    3. Compacity
+    4. X centroid
+    5. Y centroid
+    """
+    features = np.zeros(5)
+    # Perimeter
+    cnts, _ = cv2.findContours(img, 1, 2)
+    features[0] = cnts[0].sum()
+    # Area
+    features[1] = img.sum()
+    # Compacity
+    features[2] = features[0] ** 2 / features[1]
+    # X & Y centroid
+    M = cv2.moments(img)
+    features[3] = int(M['m10'] / M['m00'])
+    features[4] = int(M['m01'] / M['m00'])
+
+    return features
 
 
 def get_haralick(imgs, distance=2, header=HARALICK_NAMES):
@@ -44,12 +69,12 @@ def get_lbp(imgs, radius=1, points=8, header=None):
 def get_form(imgs, header):
     """Gets form features."""
     return pd.DataFrame([
-        form.form_descriptors(img)
+        get_form_descriptors(img)
         for img in imgs
     ], columns=header)
 
 
-def extract(verbose=True):
+def extract_features(verbose=True):
     """Extract all the features from the RIMONE-r3 dataset."""
     if verbose:
         print(' => Getting dataset')
