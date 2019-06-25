@@ -17,5 +17,5 @@ def split_dataset(file=FEATURES_URI):
 
 if __name__ == '__main__':
     train, test = split_dataset()
-    train.to_csv(TRAIN_URI)
-    test.to_csv(TEST_URI)
+    train.to_csv(TRAIN_URI, index=False)
+    test.to_csv(TEST_URI, index=False)
