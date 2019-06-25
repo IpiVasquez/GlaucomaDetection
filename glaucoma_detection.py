@@ -63,7 +63,29 @@ tp = tp.sum()
 tn = tn.sum()
 
 
-print(f'''
+print(f'''SVM:
+    Accuracy:\t\t {accuracy.mean()},
+    Sensitivity:\t {accuracy[y_test != 0].sum() / y_test.sum()}
+    Specificity:\t {accuracy[y_test == 0].sum() / (y_test == 0).sum()},
+    BAS:\t\t {balanced_accuracy_score(y_test, pred)}
+    BER:\t\t {1 - balanced_accuracy_score(y_test, pred)},
+    MCC:\t\t {matthews_corrcoef(y_test, pred)}
+''')
+
+ada = AdaBoostClassifier(learning_rate=0.08)
+ada.fit(x_train, y_train)
+pred = ada.predict(x_test)
+
+accuracy = y_test == pred
+tp = accuracy[y_test != 0]
+tn = accuracy[y_test == 0]
+fp = tp.shape[0] - tp.sum()
+fn = tn.shape[0] - tn.sum()
+tp = tp.sum()
+tn = tn.sum()
+
+
+print(f'''Ada Boost:
     Accuracy:\t\t {accuracy.mean()},
     Sensitivity:\t {accuracy[y_test != 0].sum() / y_test.sum()}
     Specificity:\t {accuracy[y_test == 0].sum() / (y_test == 0).sum()},
