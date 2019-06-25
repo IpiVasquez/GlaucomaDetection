@@ -38,7 +38,7 @@ def get_best_comb(images, target, msg=''):
     results = pd.DataFrame()
     # In disc
     for dist in range(1, 4):
-        print(f' ==> ({msg}) Distance {dist}/3', end='\r')
+        print(f' ==> ({msg}) Distance {dist}/3 (all degrees + mean)', end='\r')
         haralick = extractor.get_haralick(images, dist, HARALICK_NAMES)
         values = StandardScaler().fit_transform(haralick)
         res = evaluator.evaluate(GaussianNB, values, target)

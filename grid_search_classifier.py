@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier as KNN
 from classifier_selectors import linear_svm, ada_boost, knn
 # from lib.grid_search import get_best_params
+from lib.constants import TRAIN_URI
 
 
 def grid_search():
@@ -14,7 +15,7 @@ def grid_search():
     """
 
     print(' => Reading features dataset')
-    df = pd.read_csv('results/processed_extracted_features.csv').drop('ids', axis=1)
+    df = pd.read_csv(TRAIN_URI)  # .drop('ids', axis=1)
     y = df['Diagnosis'].values
     x = df[df.columns[1:]].values
     results = ada_boost.get_best_params(x, y).sort_values('Accuracy', ascending=False)

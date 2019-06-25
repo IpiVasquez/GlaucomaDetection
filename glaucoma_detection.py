@@ -50,9 +50,6 @@ y_test = test['Diagnosis']
 svc = SVC(C=0.1, kernel='linear')
 svc.fit(x_train, y_train)
 pred = svc.predict(x_test)
-# ada = AdaBoostClassifier(learning_rate=0.08)
-# ada.fit(x_train, y_train)
-# pred = ada.predict(x_test)
 
 accuracy = y_test == pred
 tp = accuracy[y_test != 0]
