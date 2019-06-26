@@ -40,7 +40,7 @@ import pandas as pd
 import numpy as np
 from sklearn.svm import SVC
 
-from lib.constants import SELECTION_CRITERIA, FEATURES_URI
+from lib.constants import SELECTION_CRITERIA, TRAIN_URI
 from lib.evaluator import evaluate
 
 np.seterr(divide='ignore', over='ignore', under='ignore', invalid='ignore')
@@ -61,7 +61,7 @@ def FDR(df):
 
 def ffs():
     stdout.write(' => Reading DF')
-    df = pd.read_csv(FEATURES_URI)
+    df = pd.read_csv(TRAIN_URI)
     stdout.write('\r => Gettting FDR ')
     fdr = FDR(df)
     stdout.write('\r => Initializing sets ')
@@ -87,17 +87,18 @@ def ffs():
             if evaluation[SELECTION_CRITERIA] > best_result[SELECTION_CRITERIA]:
                 best_result = evaluation
                 best_result['feature'] = f
-            # elif evaluation[SELECTION_CRITERIA] == best_result[SELECTION_CRITERIA]:
-            #     champion = best_result['feature']
-            #     challenger = f
-            #     if fdr[challenger] > fdr[champion]:
-            #         best_result = evaluation
-            #         best_result['feature'] = f
+            elif evaluation[SELECTION_CRITERIA] == best_result[SELECTION_CRITERIA]:
+                champion = best_result['feature']
+                challenger = f
+                if fdr[challenger] > fdr[champion]:
+                    best_result = evaluation
+                    best_result['feature'] = f
 
         res = res.append(best_result, ignore_index=True)
         not_ir.remove(best_result['feature'])
         ir.add(best_result['feature'])
-        stdout.write(f'\r ==> {res.shape[0]} feature{"s" if res.shape[0] else ""} selected')
+        stdout.write('\r ==> %d features selected .. %0.04f sensibility' % (
+            res.shape[0], best_result[SELECTION_CRITERIA]))
     stdout.write('\n')
     return res
 

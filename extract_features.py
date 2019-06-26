@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Feature extraction."""
-import sys
-
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from lib.constants import FEATURES_URI
+from lib.constants import FEATURES_URI, TRAIN_URI, TEST_URI, RANDOM_STATE
 from lib import extractor
 
 
@@ -31,17 +30,15 @@ def get_dataset(verbose=False, ids=False):
 
 
 if __name__ == '__main__':
-    argn = len(sys.argv)
-    if argn != 2:
-        output_file = FEATURES_URI
-    else:
-        output_file = sys.argv[1]
-    if argn > 2:
-        print('''WARNING: You're sending too many params. Usage:
-            
-            python extract_features.py [output_file]
-        ''')
     print(' => Extracting features')
     df = get_dataset(verbose=True)
     print(' => Saving extracted features')
-    df.to_csv(output_file, index=False)
+    # Whole Dataset
+    df.to_csv(FEATURES_URI, index=False)
+    # Spliting
+    train, test = train_test_split(df, stratify=df['Diagnosis'], test_size=0.2,
+                                   random_state=RANDOM_STATE)
+    # Train Dataset
+    train.to_csv(TRAIN_URI, index=False)
+    # Test Dataset
+    test.to_csv(TEST_URI, index=False)

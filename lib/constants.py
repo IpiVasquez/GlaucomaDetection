@@ -2,7 +2,7 @@
 
 RANDOM_STATE = 97
 SELECTION_CRITERIA = 'Sensibility'
-FEATURES_URI = 'results/extracted_features.csv'
+FEATURES_URI = 'datasets/extracted_features.csv'
 TRAIN_URI = 'datasets/train.csv'
 TEST_URI = 'datasets/test.csv'
 BACKUP_DIR = 'datasets/rimone'
