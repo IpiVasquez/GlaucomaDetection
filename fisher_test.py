@@ -11,11 +11,13 @@ from itertools import combinations
 from functools import reduce
 from sklearn.model_selection import cross_val_score
 
+from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-clf_names = ['Random forest', 'Adaboost']
+clf_names = ['Random forest', 'Adaboost', 'SVM']
 clfs = [
     RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
-    AdaBoostClassifier()
+    AdaBoostClassifier(),
+    SVC(kernel='linear', C=0.1)
 ]
 #clf = GaussianNB() 
 
@@ -90,8 +92,8 @@ for clf in clfs:
     results = np.concatenate([_score, _weighted, _mcc, _ber]).reshape(4,len(data.columns)-1).T
     results = pd.DataFrame(results, columns = cols)
     fdr_results.append(results)
-    #print(' => Saving csv')
-    #results.to_csv('results/fdr_{}.csv'.format(clf_names[clf_index]))
+    print(' => Saving csv')
+    results.to_csv('results/fdr_{}.csv'.format(clf_names[clf_index]))
     clf_index += 1
 
 print(fdr_results)

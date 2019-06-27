@@ -82,6 +82,20 @@ el clasificador que se desee entrenar, junto con los parámetros deseados. Para
 evaluar el clasificador, la función realiza un _Leave One Out_ sobre el conjunto
 recibido.
 
+## Ranking con el Radio discriminante de Fisher
+
+Para realizar el cálculo del fdr para cada una de las caracteristicas y realizar
+la clasificación con respecto a los valores calculados, se re lealiza ejecutando.
+
+```
+$ python3 fisher_test.py
+```
+
+Este script guarda 4 archivos csv, uno de nombre fdr.csv con los resultados calculados
+para cada caracteristica y los otros 3 son los resultados obtenidos
+con un RandomForest, AdaBoost y una svm con las primeras 1, 2, 3, etc, caracteristicas 
+ordenadas con respecto a su fdr, el nombre de estos csv es fisher_<nombre del classificador>.csv
+
 ## Selección de características
 
 La selección de características es realizada ejecutando:
