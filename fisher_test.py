@@ -21,7 +21,7 @@ clfs = [
 ]
 #clf = GaussianNB() 
 
-data = pd.read_csv('results/models/model1.csv')
+data = pd.read_csv('datasets/extracted_features.csv')
 
 def FDR(df):
     """Calculates Fisher's Linear Discriminant for each column in DF."""
@@ -35,8 +35,8 @@ def FDR(df):
 
     return reduce(reducer, combinations(df[df.columns[0]].unique(), 2), np.zeros(df.shape[1] - 1))
 
-target = data.values[:, 2]
-data = data.truncate(before="Diagnosis", axis="columns")
+target = data.values[:, 0]
+print(target)
 _fdr = FDR(data)
 _fdr = _fdr.sort_values(ascending=False)
 print(' => Saving fdr.csv')
