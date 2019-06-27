@@ -82,7 +82,7 @@ el clasificador que se desee entrenar, junto con los parámetros deseados. Para
 evaluar el clasificador, la función realiza un _Leave One Out_ sobre el conjunto
 recibido.
 
-## Ranking con el Radio discriminante de Fishe
+## Ranking con el Radio discriminante de Fisher
 
 Para realizar el cálculo del fdr para cada una de las caracteristicas y realizar
 la clasificación con respecto a los valores calculados, se re lealiza ejecutando.
