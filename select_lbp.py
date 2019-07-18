@@ -1,11 +1,10 @@
-from itertools import combinations
-from sklearn.preprocessing import StandardScaler
-from sklearn.naive_bayes import GaussianNB
 import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import StandardScaler
 
-from lib.features.extractor import get_lbp
-from lib.evaluator import evaluate
 from lib import rimone
+from lib.evaluator import evaluate
+from lib.extractor import get_lbp
 
 POINTS = [6, 7, 8, 9, 10]
 RADIUS = [1, 2, 3]
@@ -31,7 +30,6 @@ print(res.sort_values('Score', ascending=False))
 
 POINTS = [6, 7, 8, 9, 10]
 RADIUS = [1, 2, 3]
-
 
 res = pd.DataFrame()
 for p in POINTS:

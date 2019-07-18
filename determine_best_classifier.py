@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.naive_bayes import GaussianNB
+
 from classifier_selectors import linear_svm, ada_boost, knn
-from lib.evaluator import evaluate
 from lib.constants import TRAIN_URI
+from lib.evaluator import evaluate
 
 
 def grid_search():

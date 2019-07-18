@@ -5,8 +5,8 @@ import mahotas as mt
 import numpy as np
 import pandas as pd
 
-from lib.constants import HH_DISC, HH_CUP, FH_DISC, FH_CUP, HARALICK_NAMES
 from lib import rimone
+from lib.constants import HH_DISC, HH_CUP, FH_DISC, FH_CUP, HARALICK_NAMES
 
 
 def get_form_descriptors(img):

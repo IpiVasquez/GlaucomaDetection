@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 from sys import stdout
 
-import numpy as np
 import pandas as pd
-from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
 from lib.evaluator import evaluate

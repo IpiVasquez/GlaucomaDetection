@@ -1,6 +1,9 @@
 /rimone/
+.DS_Store
+.idea
 
 # On the go generated files (project specific)
 *.pyc
 *.csv
 *.pkl
+__pycache__

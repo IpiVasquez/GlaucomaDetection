@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 """Finds the best parameters to calculate Haralick features."""
-import cv2
-import mahotas as mt
-import numpy as np
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
 
+from lib import rimone, evaluator, extractor
 from lib.constants import HARALICK_NAMES
-from lib import rimone, evaluator
-from lib.features import extractor
 
 
 def run():
