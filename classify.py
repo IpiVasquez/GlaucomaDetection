@@ -1,14 +1,10 @@
 #!/usr/bin/env python
-import numpy as np
 import pandas as pd
-
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, roc_auc_score
-from sklearn.svm import SVC
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef
+from sklearn.svm import SVC
 
 from lib.constants import TRAIN_URI, TEST_URI
-
 
 # Obtained from FFS
 SELECTED_FEATURES = [
@@ -37,7 +33,6 @@ SELECTED_FEATURES = [
     'Cup LBP 101', 'Cup IC II', 'Cup homogeneity', 'Cup LBP 36', 'Disc LBP 3',
     'Cup LBP 3', 'Disc sum var', 'Cup LBP 49', 'Cup LBP 86']
 
-
 train = pd.read_csv(TRAIN_URI)
 test = pd.read_csv(TEST_URI)
 
@@ -45,7 +40,6 @@ x_train = train[SELECTED_FEATURES].values
 y_train = train['Diagnosis']
 x_test = test[SELECTED_FEATURES].values
 y_test = test['Diagnosis']
-
 
 svc = SVC(C=0.1, kernel='linear')
 svc.fit(x_train, y_train)
@@ -58,7 +52,6 @@ fp = tp.shape[0] - tp.sum()
 fn = tn.shape[0] - tn.sum()
 tp = tp.sum()
 tn = tn.sum()
-
 
 print(f'''SVM:
     Accuracy:\t\t {accuracy.mean()},
@@ -80,7 +73,6 @@ fp = tp.shape[0] - tp.sum()
 fn = tn.shape[0] - tn.sum()
 tp = tp.sum()
 tn = tn.sum()
-
 
 print(f'''Ada Boost:
     Accuracy:\t\t {accuracy.mean()},

@@ -32,12 +32,12 @@
  'Cup LBP 3', 'Disc sum var', 'Cup LBP 49', 'Cup LBP 86']
 
 """
-from itertools import combinations
 from functools import reduce
+from itertools import combinations
 from sys import stdout
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.svm import SVC
 
 from lib.constants import SELECTION_CRITERIA, TRAIN_URI
@@ -62,19 +62,19 @@ def FDR(df):
 def ffs():
     stdout.write(' => Reading DF')
     df = pd.read_csv(TRAIN_URI)
-    stdout.write('\r => Gettting FDR ')
+    stdout.write('\r => Getting FDR ')
     fdr = FDR(df)
     stdout.write('\r => Initializing sets ')
-    ir = set(['CDR'])
+    ir = {'CDR'}
     not_ir = set(df.columns[1:])
     not_ir.remove('CDR')
     Y = df['Diagnosis']
-    res = pd.DataFrame(columns=['feature', 'Accuracy'])
+    result = pd.DataFrame(columns=['feature', 'Accuracy'])
     evaluation = evaluate(SVC, df[['CDR']].values, Y, params={
         'C': 0.1, 'kernel': 'linear'
     })
     evaluation['feature'] = 'CDR'
-    res = res.append(evaluation, ignore_index=True)
+    result = result.append(evaluation, ignore_index=True)
 
     for i in range(len(not_ir)):
         features = list(ir)
@@ -94,13 +94,13 @@ def ffs():
                     best_result = evaluation
                     best_result['feature'] = f
 
-        res = res.append(best_result, ignore_index=True)
+        result = result.append(best_result, ignore_index=True)
         not_ir.remove(best_result['feature'])
         ir.add(best_result['feature'])
         stdout.write('\r ==> %d features selected .. %0.04f sensibility' % (
-            res.shape[0], best_result[SELECTION_CRITERIA]))
+            result.shape[0], best_result[SELECTION_CRITERIA]))
     stdout.write('\n')
-    return res
+    return result
 
 
 if __name__ == "__main__":

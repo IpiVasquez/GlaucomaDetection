@@ -112,3 +112,4 @@ def set_prefs(prefs):
 def project_opened(project):
     """This function is called after opening the project"""
     # Do whatever you like here!
+    raise NotImplementedError(project)

@@ -1,9 +1,11 @@
 """Contains functions to work with RIMONE."""
+import os
+import pickle
+import re
+
 import cv2
 import numpy as np
-import pickle
-import os
-import re
+
 from .constants import VALID_IMAGE_REGEXP, BACKUP_DIR
 
 META_BACKUP = 'meta.pkl'
